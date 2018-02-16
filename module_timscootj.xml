@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_timscootj" default="compile.module.timscootj">
+  <dirname property="module.timscootj.basedir" file="${ant.file.module_timscootj}"/>
+  
+  <property name="module.jdk.home.timscootj" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.timscootj" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.timscootj" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.timscootj" value="-encoding UTF-8 -source 1.8 -target 1.8 ${compiler.args}"/>
+  
+  <property name="timscootj.output.dir" value="${module.timscootj.basedir}/out/production/TimScootJ"/>
+  <property name="timscootj.testoutput.dir" value="${module.timscootj.basedir}/out/test/TimScootJ"/>
+  
+  <path id="timscootj.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="timscootj.module.production.classpath">
+    <path refid="${module.jdk.classpath.timscootj}"/>
+    <path refid="library.frcuserprogram.classpath"/>
+    <path refid="library.jars.classpath"/>
+  </path>
+  
+  <path id="timscootj.runtime.production.module.classpath">
+    <pathelement location="${timscootj.output.dir}"/>
+    <path refid="library.frcuserprogram.classpath"/>
+    <path refid="library.jars.classpath"/>
+  </path>
+  
+  <path id="timscootj.module.classpath">
+    <path refid="${module.jdk.classpath.timscootj}"/>
+    <pathelement location="${timscootj.output.dir}"/>
+    <path refid="library.frcuserprogram.classpath"/>
+    <path refid="library.jars.classpath"/>
+  </path>
+  
+  <path id="timscootj.runtime.module.classpath">
+    <pathelement location="${timscootj.testoutput.dir}"/>
+    <pathelement location="${timscootj.output.dir}"/>
+    <path refid="library.frcuserprogram.classpath"/>
+    <path refid="library.jars.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.timscootj">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.timscootj">
+    <patternset refid="excluded.from.module.timscootj"/>
+  </patternset>
+  
+  <path id="timscootj.module.sourcepath">
+    <dirset dir="${module.timscootj.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.timscootj" depends="compile.module.timscootj.production,compile.module.timscootj.tests" description="Compile module TimScootJ"/>
+  
+  <target name="compile.module.timscootj.production" depends="register.custom.compilers" description="Compile module TimScootJ; production classes">
+    <mkdir dir="${timscootj.output.dir}"/>
+    <javac2 destdir="${timscootj.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.timscootj}/javac">
+      <compilerarg line="${compiler.args.timscootj}"/>
+      <bootclasspath refid="timscootj.module.bootclasspath"/>
+      <classpath refid="timscootj.module.production.classpath"/>
+      <src refid="timscootj.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.timscootj"/>
+    </javac2>
+    
+    <copy todir="${timscootj.output.dir}">
+      <fileset dir="${module.timscootj.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.timscootj.tests" depends="register.custom.compilers,compile.module.timscootj.production" description="compile module TimScootJ; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.timscootj" description="cleanup module">
+    <delete dir="${timscootj.output.dir}"/>
+    <delete dir="${timscootj.testoutput.dir}"/>
+  </target>
+</project>
