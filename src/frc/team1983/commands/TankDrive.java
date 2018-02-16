@@ -41,8 +41,23 @@ public class TankDrive extends Command
     @Override
     protected void execute()
     {
-        exCaliper.getDriveBase().setLeftSpeed(exCaliper.getOi().getLeftJoy());
-        exCaliper.getDriveBase().setRightSpeed(exCaliper.getOi().getRightJoy());
+        double leftJoy = exCaliper.getOi().getLeftJoy();
+        double rightJoy = exCaliper.getOi().getRightJoy();
+
+        exCaliper.getDriveBase().setLeftSpeed(scaleJoy(leftJoy));
+        exCaliper.getDriveBase().setRightSpeed(scaleJoy(rightJoy));
+    }
+
+    private double scaleJoy(double joyValue)
+    {
+        if(joyValue<0)
+        {
+            return -(joyValue*joyValue);
+        }
+        else
+        {
+            return (joyValue*joyValue);
+        }
     }
 
 
